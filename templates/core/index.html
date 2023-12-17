@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Tabela Bootstrap</title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                Tracescopio
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Olá, {{request.user}}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin">Área Administrativa</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'app-logout' %}">Sair</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container mt-5">
+        <h2 class="mb-4">Aplicações e Reports</h2>
+    
+        <!-- Tabela para monitores grandes -->
+        <div class="d-none d-lg-block">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Aplicações</th>
+                        <th>Reports</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for app in aplicacoes %}
+                    <tr>
+                        <td>
+                            {{app.nome}} - <small>({{app.ide}})</small>
+                            <br/>
+                            <small>
+                                <a href="{{app.url}}" target="_blank">{{app.url}}</a>
+                            </small>
+                        </td>
+                        <td>                            
+                            <ul class="list-group">
+                                {% for report in app.reports.all %}
+                                    <li class="list-group-item text-danger">
+                                        <span style="font-weight: bold;">{{report.erro}}</span>
+                                        <pre>
+                                            {{report.traceback}}
+                                        </pre>
+                                    </li>
+                                {% empty %}
+                                    <li class="list-group-item">
+                                        Sem erros registrados
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    <!-- Adicione mais linhas conforme necessário -->
+                </tbody>
+            </table>
+        </div>
+    
+        <!-- Cards para dispositivos móveis -->
+        <div class="d-lg-none card-columns">
+            {% for app in aplicacoes %}
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{app.nome}} 
+                        <small style="font-size: 0.6em;">({{app.ide}})</small>
+                        <small>
+                            <a href="{{app.url}}">{{app.url}}</a>
+                        </small>
+
+                    </h5>
+                    <ul class="list-unstyled">
+                        {% for report in app.reports.all %}
+                        <li style="border-bottom: solid 1px #ccc;padding-top:1%">
+                            <strong>{{report.data_hora}}</strong>
+                            <pre>
+                                {{report.traceback}}
+                            </pre>
+                        </li>
+                        {% endfor %}                        
+                    </ul>
+                </div>
+            </div>
+            {% empty %}
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Sem apps</h5>
+                </div>
+            </div>            
+            {% endfor %}
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
