@@ -1,7 +1,7 @@
 from pathlib import Path
 from setuptools import setup, find_packages
 
-VERSION = '2.0.0' 
+VERSION = '2.0.1' 
 DESCRIPTION = 'Tracescopio - um capturador simples de tracebacks'
 this_directory = Path(__file__).parent
 long_description = (this_directory / "README.md").read_text()
