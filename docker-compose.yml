@@ -1,0 +1,35 @@
+version: "3.3"
+
+services:
+  db:
+    image: postgres
+    container_name: tracescopio-db
+    restart: always
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=tracescopio_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=4pp@TRacert
+    networks:
+      tracescopio-net:
+        ipv4_address: 172.76.0.2    
+  web:
+    build: .
+    container_name: tracescopio-app
+    restart: always
+    environment:
+      - ENVIRONMENT=production
+    command: /usr/bin/supervisord
+    volumes:
+      - .:/code
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
+    networks:
+      tracescopio-net:
+        ipv4_address: 172.76.0.3
+networks:
+  tracescopio-net:
+    external: true
